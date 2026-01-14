@@ -1,88 +1,62 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final bool isWeb; // Nhận tham số từ Nav truyền vào
+
+  const HomeScreen({super.key, required this.isWeb});
 
   @override
   Widget build(BuildContext context) {
-    // Lấy chiều rộng màn hình để tính toán tỉ lệ
     double screenWidth = MediaQuery.of(context).size.width;
-    bool isWeb = screenWidth > 800; // Định nghĩa ngưỡng Web là trên 800px
 
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: isWeb ? false : true, // Web để canh trái, Mobile canh giữa
-        title: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 1200,
-          ), // Giới hạn khung nội dung
-          child: Text(
-            'V-GREEN',
-            style: TextStyle(
-              color: Colors.green[700],
-              fontWeight: FontWeight.bold,
-            ),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: ListView(
+          padding: EdgeInsets.symmetric(
+            horizontal: isWeb ? screenWidth * 0.1 : 16,
+            vertical: 20,
           ),
-        ),
-      ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 1200,
-          ), // Nội dung không bao giờ rộng quá 1200px
-          child: ListView(
-            padding: EdgeInsets.symmetric(
-              horizontal: isWeb
-                  ? screenWidth * 0.1
-                  : 16, // Web thì thụt lề 10%, Mobile 16px
-              vertical: 20,
-            ),
-            children: [
-              // 1. Banner - Tỉ lệ 16:9 trên Mobile, hẹp hơn trên Web
-              AspectRatio(
-                aspectRatio: isWeb ? 4 / 1 : 16 / 7,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.green[400]!, Colors.green[700]!],
-                    ),
-                    borderRadius: BorderRadius.circular(15),
+          children: [
+            // 1. Banner
+            AspectRatio(
+              aspectRatio: isWeb ? 4 / 1 : 16 / 7,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.green[400]!, Colors.green[700]!],
                   ),
-                  child: const Center(
-                    child: Text(
-                      "NÔNG SẢN ĐÓNG GÓI CHẤT LƯỢNG CAO",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: const Center(
+                  child: Text(
+                    "NÔNG SẢN CHẤT LƯỢNG CAO",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
                   ),
                 ),
               ),
+            ),
 
-              const SizedBox(height: 30),
+            const SizedBox(height: 30),
 
-              // 2. Grid Sản phẩm - Thay đổi số cột dựa trên kích thước màn hình
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: isWeb
-                      ? 4
-                      : 2, // Web hiện 4 cột, Mobile hiện 2 cột
-                  childAspectRatio: 0.75,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                ),
-                itemCount: 8,
-                itemBuilder: (context, index) => _buildProductCard(),
+            // 2. Grid Sản phẩm
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: isWeb ? 4 : 2,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
               ),
-            ],
-          ),
+              itemCount: 8,
+              itemBuilder: (context, index) => _buildProductCard(),
+            ),
+          ],
         ),
       ),
     );
@@ -93,7 +67,7 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
